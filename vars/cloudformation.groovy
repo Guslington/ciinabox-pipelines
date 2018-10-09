@@ -64,6 +64,8 @@ def handleActionRequest(cf, config){
   def success = false
 
   switch(config.action) {
+    case 'changeSet':
+      break
     case 'create':
       if(!doesStackExist(cf,config.stackName)) {
         create(cf, config)
@@ -445,4 +447,19 @@ def s3bucketKeyFromUrl(String s3url) {
             key   : parts[4..parts.size() - 1].join("/")
     ]
   }
+}
+
+@NonCPS
+def createChangeSet() {
+
+}
+
+@NonCPS
+def updateChangeSet() {
+
+}
+
+@NonCPS
+def waitForChangeSet() {
+
 }
