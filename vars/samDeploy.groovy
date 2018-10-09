@@ -43,7 +43,7 @@ def call(body) {
       --template-file ${compiled_template} \
       --s3-bucket ${config.source_bucket} \
       --s3-prefix ${config.prefix} \
-      --stack-name ${stackName} \
+      --stack-name ${config.stackName} \
       ${params}
       --capabilities CAPABILITY_IAM
     """
