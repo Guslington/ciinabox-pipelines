@@ -44,7 +44,7 @@ def call(body) {
       --s3-bucket ${config.source_bucket} \
       --s3-prefix ${config.prefix} \
       --stack-name ${config.stackName} \
-      ${params}
+      ${params} \
       --capabilities CAPABILITY_IAM \
       --region ${config.region}
     """
