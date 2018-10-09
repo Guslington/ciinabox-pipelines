@@ -37,7 +37,7 @@ def call(body) {
   println("deploying ${compiled_template} to environment ${config.environment}")
 
   withIAMRole(config.accountId,config.region,config.role) {
-    sh '''
+    sh """
     #!/bin/bash
     aws cloudformation deploy \
       --template-file ${compiled_template} \
@@ -46,6 +46,6 @@ def call(body) {
       --stack-name ${stackName} \
       ${params}
       --capabilities CAPABILITY_IAM
-    '''
+    """
   }
 }

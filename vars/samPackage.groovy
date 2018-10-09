@@ -19,14 +19,14 @@ def call(body) {
 
   println "Compiling SAM template"
 
-  sh '''
+  sh """
   #!/bin/bash
   aws cloudformation package \
     --template-file ${config.template} \
     --s3-bucket ${config.source_bucket} \
     --s3-prefix ${config.prefix} \
     --output-template-file ${compiled_template}
-  '''
+  """
 
   println("Copying ${compiled_template} to s3://${config.source_bucket}/${config.prefix}")
 
