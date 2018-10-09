@@ -30,7 +30,7 @@ def call(body) {
   def options = "--template-file ${compiled_template} --stack-name ${config.stackName} --capabilities CAPABILITY_IAM --region ${config.region}"
 
   if (config.parameters != null || !config.parameters.empty) {
-    options = " --parameter-overrides"
+    options = options.concat(" --parameter-overrides")
     config.parameters.each {
       options = options.concat(" ${it.key}=${it.value}")
     }
