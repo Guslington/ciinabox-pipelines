@@ -4,7 +4,7 @@
  Packages sam template and pushes artefacts to S3
 
  example usage
- samPackage(
+ samDeploy(
    region: env.AWS_REGION,
    stackName: dev,
    template: template.yaml,
