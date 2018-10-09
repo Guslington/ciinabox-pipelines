@@ -27,7 +27,7 @@ def call(body) {
 
   sh "aws s3 cp s3://${config.source_bucket}/${config.prefix}/${compiled_template} ${compiled_template}"
 
-  if (parameters != null || !parameters.empty) {
+  if (config.parameters != null || !config.parameters.empty) {
     params = "--parameter-overrides"
     config.parameters.each {
       params = params.concat(" ${it.key}=${it.value}")
