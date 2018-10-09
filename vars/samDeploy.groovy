@@ -45,7 +45,8 @@ def call(body) {
       --s3-prefix ${config.prefix} \
       --stack-name ${config.stackName} \
       ${params}
-      --capabilities CAPABILITY_IAM
+      --capabilities CAPABILITY_IAM \
+      --region ${config.region}
     """
   }
 }
