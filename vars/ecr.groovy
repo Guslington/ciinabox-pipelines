@@ -7,11 +7,12 @@
    region: 'ap-southeast-2',
    image: 'myrepo/image',
    otherAccountIds: ['0987654321','5432167890'],
-   taggedCleanup: ['master','develop']
+   taggedCleanup: ['master','develop'],
+   tags: [ key: value ] # key value map of tags
  )
  ************************************/
 
-@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.359')
+@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.482')
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
@@ -21,6 +22,7 @@ def call(body) {
   def config = body
   def ecr = setupClient(config.region)
   createRepo(ecr,config.image)
+  addTags(ecr,config)
   if (config.otherAccountIds) {
     setRepositoryPolicy(ecr,config)
   }
@@ -59,6 +61,7 @@ def call(body) {
   setLifcyclePolicy(ecr,rules,config)
 }
 
+@NonCPS
 def createRepo(ecr,repo) {
   try{
     ecr.createRepository(new CreateRepositoryRequest()
@@ -98,6 +101,7 @@ def setRepositoryPolicy(ecr,config) {
   )
 }
 
+@NonCPS
 def setLifcyclePolicy(ecr,rules,config) {
   def policy = [ rules: rules ]
   def builder = new groovy.json.JsonBuilder(policy)
@@ -109,8 +113,22 @@ def setLifcyclePolicy(ecr,rules,config) {
   )
 }
 
+@NonCPS
 def setupClient(region) {
   return AmazonECRClientBuilder.standard()
     .withRegion(region)
     .build()
+}
+
+@NonCPS
+def addTags(ecr,config) {
+  List<Tag> tags = new ArrayList<Tag>()
+  tags.add(new Tag("Name", config.image))
+  tags.add(new Tag("CreatedBy", "ciinabox-pipelines"))
+  if (config.containsKey('tags')) {
+    config.tags.each { k,v -> tags.add(new Tag(k,v)) }
+  }
+  ecr.tagResource(new TagResourceRequest()
+    .withTags(tags)
+  )
 }
