@@ -124,7 +124,7 @@ def setupClient(region) {
 def addTags(ecr,config) {
   List<Tag> tags = new ArrayList<Tag>()
   tags.add(new Tag().setKey('Name').setValue(config.image))
-  tags.add(new Tag().setKey('CreatedBy').setValue('ciinabox-pipelines')s)
+  tags.add(new Tag().setKey('CreatedBy').setValue('ciinabox-pipelines'))
   if (config.containsKey('tags')) {
     config.tags.each { k,v -> tags.add(new Tag().setKey(k).setValue(v))) }
   }
