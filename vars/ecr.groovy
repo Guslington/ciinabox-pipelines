@@ -12,7 +12,7 @@
  )
  ************************************/
 
-@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.476')
+@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.471')
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
