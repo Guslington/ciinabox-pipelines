@@ -16,8 +16,6 @@
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
-import com.amazonaws.services.ecr.model.Tag
-import com.amazonaws.services.ecr.model.TagResourceRequest
 import com.amazonaws.regions.*
 
 def call(body) {
@@ -125,10 +123,10 @@ def setupClient(region) {
 @NonCPS
 def addTags(ecr,config) {
   List<Tag> tags = new ArrayList<Tag>()
-  tags.add(new Tag("Name", config.image))
-  tags.add(new Tag("CreatedBy", "ciinabox-pipelines"))
+  tags.add(new Tag().setKey('Name').setValue(config.image))
+  tags.add(new Tag().setKey('CreatedBy').setValue('ciinabox-pipelines')s)
   if (config.containsKey('tags')) {
-    config.tags.each { k,v -> tags.add(new Tag(k,v)) }
+    config.tags.each { k,v -> tags.add(new Tag().setKey(k).setValue(v))) }
   }
   ecr.tagResource(new TagResourceRequest()
     .withTags(tags)
