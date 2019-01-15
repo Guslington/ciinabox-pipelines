@@ -16,6 +16,8 @@
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
+import com.amazonaws.services.ecr.model.Tag
+import com.amazonaws.services.ecr.model.TagResourceRequest
 import com.amazonaws.regions.*
 
 def call(body) {
