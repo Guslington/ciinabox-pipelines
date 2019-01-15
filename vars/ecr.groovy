@@ -126,7 +126,7 @@ def addTags(ecr,config) {
   tags.add(new Tag().setKey('Name').setValue(config.image))
   tags.add(new Tag().setKey('CreatedBy').setValue('ciinabox-pipelines'))
   if (config.containsKey('tags')) {
-    config.tags.each { k,v -> tags.add(new Tag().setKey(k).setValue(v))) }
+    config.tags.each { k,v -> tags.add(new Tag().setKey(k).setValue(v)) }
   }
   ecr.tagResource(new TagResourceRequest()
     .withTags(tags)
