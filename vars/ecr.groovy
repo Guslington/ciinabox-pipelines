@@ -123,10 +123,10 @@ def setupClient(region) {
 @NonCPS
 def addTags(ecr,config) {
   List<Tag> tags = new ArrayList<Tag>()
-  tags.add(new Tag().setKey('Name').setValue(config.image))
-  tags.add(new Tag().setKey('CreatedBy').setValue('ciinabox-pipelines'))
+  tags.add(new Tag().withKey('Name').withValue(config.image))
+  tags.add(new Tag().withKey('CreatedBy').withValue('ciinabox-pipelines'))
   if (config.containsKey('tags')) {
-    config.tags.each { k,v -> tags.add(new Tag().setKey(k).setValue(v)) }
+    config.tags.each { k,v -> tags.add(new Tag().withKey(k).withValue(v)) }
   }
   ecr.tagResource(new TagResourceRequest()
     .withTags(tags)
