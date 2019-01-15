@@ -129,6 +129,7 @@ def addTags(ecr,config) {
     config.tags.each { k,v -> tags.add(new Tag().withKey(k).withValue(v)) }
   }
   ecr.tagResource(new TagResourceRequest()
+    .withResourceArn("arn:aws:ecr:${config.region}:${config.accountId}:repository/${config.repo}")
     .withTags(tags)
   )
 }
