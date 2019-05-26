@@ -14,6 +14,10 @@ cloudformation
   parameters: [
     'ENVIRONMENT_NAME' : 'dev',
   ],
+  tags: [
+    'EnvironmentName' : 'dev',
+    'EnvironmentType' : 'development'
+  ]
   accountId: '1234567890' #the aws account Id you want the stack operation performed in
   role: 'myrole' # the role to assume from the account the pipeline is running from
 )
@@ -179,11 +183,16 @@ def create(cf, config) {
   config.parameters.each {
     params << new Parameter().withParameterKey(it.key).withParameterValue(it.value)
   }
+  def tags = []
+  config.tags.each {
+    tags << new Tag().withKey(it.key).withValue(it.value)
+  }
   cf.createStack(new CreateStackRequest()
     .withStackName(config.stackName)
     .withCapabilities('CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM')
     .withParameters(params)
     .withTemplateURL(config.templateUrl))
+    .withTags(tags)
 }
 
 @NonCPS
@@ -532,7 +541,7 @@ def setCfTemplateUrl(ssm, config, basePath) {
     throw new GroovyRuntimeException("Unable to load CfTemplateUrl ssm param for stack ${config.stackName} from ssm path ${basePath}")
   }
 }
- 
+
 @NonCPS
 def saveStackState(cf, config) {
   def stacks = cf.describeStacks(new DescribeStacksRequest().withStackName(config.stackName)).getStacks()
@@ -558,7 +567,7 @@ def saveStackState(cf, config) {
           .withType('String')
           .withValue(output.outputValue)
           .withOverwrite(true)
-        )        
+        )
       }
       out += "${basePath}/${output.outputKey}=${output.outputValue}\n"
     }
