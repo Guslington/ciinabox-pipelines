@@ -7,11 +7,12 @@
    region: 'ap-southeast-2',
    image: 'myrepo/image',
    otherAccountIds: ['0987654321','5432167890'],
-   taggedCleanup: ['master','develop']
+   taggedCleanup: ['master','develop'],
+   scanOnPush: true | false
  )
  ************************************/
 
-@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.359')
+@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.660')
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
@@ -57,6 +58,7 @@ def call(body) {
   }
 
   setLifcyclePolicy(ecr,rules,config)
+  setScanningConfig(ecr,config)
 }
 
 def createRepo(ecr,repo) {
@@ -106,6 +108,15 @@ def setLifcyclePolicy(ecr,rules,config) {
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
     .withLifecyclePolicyText(builder.toString())
+  )
+}
+
+def setScanningConfig(ecr,config) {
+  def scanOnPush = new ImageScanningConfiguration().withScanOnPush(config.scanOnPush)
+  ecr.putImageScanningConfiguration(new PutImageScanningConfigurationRequest()
+    .withRepositoryName(config.image)
+    .withRegistryId(config.accountId)
+    .withImageScanningConfiguration(scanOnPush)
   )
 }
 
