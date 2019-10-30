@@ -8,11 +8,10 @@
    image: 'myrepo/image',
    otherAccountIds: ['0987654321','5432167890'],
    taggedCleanup: ['master','develop'],
+   imutableTags: true | false,
    scanOnPush: true | false
  )
  ************************************/
-
-@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.660')
 
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
@@ -58,9 +57,11 @@ def call(body) {
   }
 
   setLifcyclePolicy(ecr,rules,config)
+  setImutableTags(ecr,config)
   setScanningConfig(ecr,config)
 }
 
+@NonCPS
 def createRepo(ecr,repo) {
   try{
     ecr.createRepository(new CreateRepositoryRequest()
@@ -72,6 +73,7 @@ def createRepo(ecr,repo) {
   }
 }
 
+@NonCPS
 def setRepositoryPolicy(ecr,config) {
   def document = [
     "Version": "2008-10-17",
@@ -100,6 +102,7 @@ def setRepositoryPolicy(ecr,config) {
   )
 }
 
+@NonCPS
 def setLifcyclePolicy(ecr,rules,config) {
   def policy = [ rules: rules ]
   def builder = new groovy.json.JsonBuilder(policy)
@@ -111,6 +114,19 @@ def setLifcyclePolicy(ecr,rules,config) {
   )
 }
 
+@NonCPS
+def setImutableTags(ecr,config) {
+  def imutableTags = config.get('imutableTags', false)
+  def imutableTagsString = ((imutableTags) ? 'IMMUTABLE' : 'MUTABLE')
+  println "Setting image tags on repo to ${tagMutability}"
+  ecr.putImageTagMutability(new PutImageTagMutabilityRequest()
+    .withRepositoryName(config.image)
+    .withRegistryId(config.accountId)
+    .withImageTagMutability(imutableTagsString)
+  )
+}
+
+@NonCPS
 def setScanningConfig(ecr,config) {
   def scanOnPush = new ImageScanningConfiguration().withScanOnPush(config.scanOnPush)
   ecr.putImageScanningConfiguration(new PutImageScanningConfigurationRequest()
@@ -120,6 +136,7 @@ def setScanningConfig(ecr,config) {
   )
 }
 
+@NonCPS
 def setupClient(region) {
   return AmazonECRClientBuilder.standard()
     .withRegion(region)
