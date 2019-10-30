@@ -9,7 +9,10 @@
    otherAccountIds: ['0987654321','5432167890'],
    taggedCleanup: ['master','develop'],
    imutableTags: true | false,
-   scanOnPush: true | false
+   scanOnPush: true | false,
+   awsTags: [
+     'Key': 'Value'
+   ]
  )
  ************************************/
 
@@ -57,7 +60,8 @@ def call(body) {
       ]
     ]
   }
-
+  
+  setRepoTags(ecr,config)
   setLifcyclePolicy(ecr,rules,config)
   setImutableTags(ecr,config)
   setScanningConfig(ecr,config)
@@ -137,6 +141,20 @@ def setScanningConfig(ecr,config) {
     .withImageScanningConfiguration(scanOnPush)
   println "Setting image scan on repo ${config.image} to ${config.scanOnPush}"
   ecr.putImageScanningConfiguration(request)
+}
+
+@NonCPS
+def setRepoTags(ecr,config) {
+  List<Tag> tags = new ArrayList<Tag>()
+  tags.add(new Tag().withKey('Name').withValue(config.image))
+  tags.add(new Tag().withKey('CreatedBy').withValue('ciinabox-pipelines'))
+  if (config.containsKey('tags')) {
+    config.tags.each { k,v -> tags.add(new Tag().withKey(k).withValue(v)) }
+  }
+  ecr.tagResource(new TagResourceRequest()
+    .withResourceArn("arn:aws:ecr:${config.region}:${config.accountId}:repository/${config.image}")
+    .withTags(tags)
+  )
 }
 
 @NonCPS
