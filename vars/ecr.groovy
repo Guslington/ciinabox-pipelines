@@ -124,7 +124,7 @@ def setImutableTags(ecr,config) {
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
     .withImageTagMutability(imutableTagsString)
-  println "Setting image tags on repo ${config.repo} to ${imutableTagsString}"
+  println "Setting image tags on repo ${config.image} to ${imutableTagsString}"
   ecr.putImageTagMutability(request)
 }
 
@@ -135,7 +135,7 @@ def setScanningConfig(ecr,config) {
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
     .withImageScanningConfiguration(scanOnPush)
-  println "Setting image scan on repo ${config.repo} to ${config.scanOnPush}"
+  println "Setting image scan on repo ${config.image} to ${config.scanOnPush}"
   ecr.putImageScanningConfiguration(request)
 }
 
