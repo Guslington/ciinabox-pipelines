@@ -27,12 +27,54 @@ def call(body) {
   }
   
   waitForScanResults(ecr,config)
-  displayScanResults(ecr, config)
+  def results = getScanResults(ecr,config)
+  displayScanResults(results)
+  failOnSeverity(results,config)
+}
+
+@NonCPS
+def failOnSeverity(results,config) {
+  def severityCount = results.getImageScanFindings().getFindingSeverityCounts()
+  def failOn = config.get('failOn','CRITICAL')
+
+  switch(failOn) {
+    case 'UNDEFINED':
+      severityOrder = ['UNDEFINED','INFORMATIONAL','LOW','MEDIUM','HIGH','CRITICAL']
+      break
+    case 'INFORMATIONAL':
+      severityOrder = ['INFORMATIONAL','LOW','MEDIUM','HIGH','CRITICAL']
+      break
+    case 'LOW':
+      severityOrder = ['LOW','MEDIUM','HIGH','CRITICAL']
+      break
+    case 'MEDIUM':
+      severityOrder = ['MEDIUM','HIGH','CRITICAL']
+      break
+    case 'HIGH':
+      severityOrder = ['HIGH','CRITICAL']
+      break
+    case 'CRITICAL':
+      severityOrder = ['CRITICAL']
+      break
+  }
+
+  severityOrder.each { severity ->
+    if (severityCount.containsKey(severity)) {
+      throw new GroovyRuntimeException("image scan found ${severityCount[severity]} severity ${severity} vulnerabilities. Exiting...")
+    }
+  }
 }
 
 @NonCPS
 def displayScanResults(ecr,config) {
-  ImageScanFindings findings = getScanResults(ecr,config).getImageScanFindings()
+  def findings = results.getImageScanFindings().getFindings()
+  println "\n========================================================================="
+  println "## Scan Results                                                        ##"
+  println "========================================================================="
+  findings.each {
+    println "Severity: ${it.severity} Name: ${it.name} Package: ${it.attributes[1].value} Version: ${it.attributes[0].value}"
+  }
+  println "=========================================================================\n"
 }
 
 @NonCPS
