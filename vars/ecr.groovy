@@ -13,6 +13,8 @@
  )
  ************************************/
 
+@Grab(group='com.amazonaws', module='aws-java-sdk-ecr', version='1.11.661')
+
 import com.amazonaws.services.ecr.*
 import com.amazonaws.services.ecr.model.*
 import com.amazonaws.regions.*
