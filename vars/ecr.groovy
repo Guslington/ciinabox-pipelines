@@ -120,7 +120,7 @@ def setLifcyclePolicy(ecr,rules,config) {
 def setImutableTags(ecr,config) {
   def imutableTags = config.get('imutableTags', false)
   def imutableTagsString = ((imutableTags) ? 'IMMUTABLE' : 'MUTABLE')
-  println "Setting image tags on repo to ${tagMutability}"
+  println "Setting image tags on repo to ${imutableTagsString}"
   ecr.putImageTagMutability(new PutImageTagMutabilityRequest()
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
