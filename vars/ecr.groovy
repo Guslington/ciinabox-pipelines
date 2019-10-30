@@ -120,22 +120,23 @@ def setLifcyclePolicy(ecr,rules,config) {
 def setImutableTags(ecr,config) {
   def imutableTags = config.get('imutableTags', false)
   def imutableTagsString = ((imutableTags) ? 'IMMUTABLE' : 'MUTABLE')
-  println "Setting image tags on repo to ${imutableTagsString}"
-  ecr.putImageTagMutability(new PutImageTagMutabilityRequest()
+  def request = new PutImageTagMutabilityRequest()
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
     .withImageTagMutability(imutableTagsString)
-  )
+  println "Setting image tags on repo ${config.repo} to ${imutableTagsString}"
+  ecr.putImageTagMutability(request)
 }
 
 @NonCPS
 def setScanningConfig(ecr,config) {
   def scanOnPush = new ImageScanningConfiguration().withScanOnPush(config.scanOnPush)
-  ecr.putImageScanningConfiguration(new PutImageScanningConfigurationRequest()
+  def request = new PutImageScanningConfigurationRequest()
     .withRepositoryName(config.image)
     .withRegistryId(config.accountId)
     .withImageScanningConfiguration(scanOnPush)
-  )
+  println "Setting image scan on repo ${config.repo} to ${config.scanOnPush}"
+  ecr.putImageScanningConfiguration(request)
 }
 
 @NonCPS
