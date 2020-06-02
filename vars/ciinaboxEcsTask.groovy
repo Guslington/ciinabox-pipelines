@@ -59,5 +59,7 @@ def call(body) {
   def cpu = config.get('cpu', 512)
   def memory = config.get('memory', 1024)
   
-  sh "ecs-cli compose --project-name ${id} --file ${composeFile} ${config.action} --launch-type FARGATE --cluster ${cluster}"
+  sh "ecs-cli compose --region ${region} --project-name ${id} --file ${composeFile} ${config.action} --launch-type FARGATE --cluster ${cluster}"
+  
+  sh "ecs-cli compose --region ${region} --project-name ${id} ps --desired-status RUNNING --cluster ${cluster} | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'"
 }
