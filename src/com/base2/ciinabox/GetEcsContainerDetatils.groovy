@@ -13,9 +13,9 @@ class GetEcsContainerDetatils implements Serializable {
   private static taskDefVersion
   private static taskDefintion
   
-  GetEcsContainerDetatils(region, env) {
+  GetEcsContainerDetatils(region) {
     def jsonSlurper = new JsonSlurper()
-    def uri = "echo \$ECS_CONTAINER_METADATA_URI_V4".execute().text
+    def uri = System.getenv("ECS_CONTAINER_METADATA_URI_V4")
     def resp = uri.toURL().text
     def doc = jsonSlurper.parseText(resp)
     cluster = doc["Labels"]["com.amazonaws.ecs.cluster"]

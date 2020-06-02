@@ -43,14 +43,15 @@ def call(body) {
   if (!instanceId) {
     instanceId = metadata.instanceId()
   }
-
-  def instance = new GetInstanceDetails(metadata.region(), instanceId)
   
   def region = config.get('region', metadata.region())
+  
+  def instance = new GetInstanceDetails(region, instanceId)
+  
   def subnet = config.get('subnet', instance.subnet())
   def securityGroup = config.get('securityGroup', instance.securityGroup())
   
-  def task = new GetEcsContainerDetatils(metadata.region(), env)
+  def task = new GetEcsContainerDetatils(region)
   
   def instanceProfile = config.get('executionRole', task.executionRole())
   def cluster = config.get('cluster', task.cluster())
