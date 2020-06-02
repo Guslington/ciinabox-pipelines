@@ -56,7 +56,7 @@ def call(body) {
   def cluster = config.get('cluster', task.cluster())
   
   def cpu = config.get('cpu', 512)
-  def cpu = config.get('cpu', 1024)
+  def memory = config.get('memory', 1024)
   
   sh "ecs-cli compose --project-name ${id} --file ${composeFile} ${config.action} --launch-type FARGATE --cluster ${cluster}"
 }
