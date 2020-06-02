@@ -13,7 +13,7 @@ class GetEcsContainerDetatils implements Serializable {
   private static taskDefVersion
   private static taskDefintion
   
-  GetEcsContainerDetatils(env, region) {
+  GetEcsContainerDetatils(region, env) {
     def jsonSlurper = new JsonSlurper()
     def resp = env.ECS_CONTAINER_METADATA_URI_V4.toURL().text
     def doc = jsonSlurper.parseText(resp)
