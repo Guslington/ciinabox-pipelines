@@ -26,11 +26,13 @@ import com.base2.ciinabox.GetEcsContainerDetatils
 def call(body) {
   def config = body
   
-  if !(config.action) || (config.action ==~ /^(up|down)$/){
+  if (!config.action) || (config.action ==~ /^(up|down)$/){
     error("action param must be supplied with the value of `up` or `down`")
   }
   
   def id = UUID.randomUUID().toString()
+  
+  echo id
   
   def composeFile = config.get('composeFile', 'docker-compose.yml')
   
