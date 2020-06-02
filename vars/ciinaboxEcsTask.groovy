@@ -61,5 +61,5 @@ def call(body) {
   
   sh "ecs-cli compose --region ${region} --project-name ${id} --file ${composeFile} ${config.action} --launch-type FARGATE --cluster ${cluster}"
   
-  sh "ecs-cli compose --region ${region} --project-name ${id} ps --desired-status RUNNING --cluster ${cluster} | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'"
+  sh "ecs-cli compose --region ${region} --project-name ${id} ps --desired-status RUNNING --cluster ${cluster} | grep -oE '[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}'"
 }
